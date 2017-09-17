@@ -42,8 +42,16 @@ public class MovieFragmentList extends Fragment {
           "movies.rueda.roque.com.roquemovies.fragments.SHARED_PREFERENCES";
   public static final String LIST_POPULAR = "popular";
 
+  /**
+   * Required interface for hosting activities.
+   */
+  public interface Callbacks {
+    void onMovieSelected(Movie m);
+  }
+
   private RecyclerView mMoviesRecyclerView;
   private MoviesAdapter mAdapter;
+  private Callbacks mCallbacks;
 
   public static boolean getPopularMovies(Context ctx) {
     SharedPreferences preferences = ctx.
@@ -114,8 +122,7 @@ public class MovieFragmentList extends Fragment {
     @Override
     public void onClick(View view) {
       // Launch another activity when the user press on a poster
-      Intent intent = MovieDetailActivity.newIntent(getActivity(), mCurrentMovie.getId());
-      startActivity(intent);
+      mCallbacks.onMovieSelected(mCurrentMovie);
     }
   }
 
@@ -144,6 +151,18 @@ public class MovieFragmentList extends Fragment {
     public int getItemCount() {
       return mMovies.size();
     }
+  }
+
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    mCallbacks = (Callbacks) context;
+  }
+
+  @Override
+  public void onDetach() {
+    super.onDetach();
+    mCallbacks = null;
   }
 
   @Override
