@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RoqueMovies</string>
+    <string name="mark_as_favorite">Mark as favorite</string>
+    <string name="movie_poster">Movie poster</string>
 </resources>
