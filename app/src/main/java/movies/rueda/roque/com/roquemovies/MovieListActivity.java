@@ -13,8 +13,6 @@ public class MovieListActivity extends BaseActivity {
 
   @Override
   protected Fragment getFragment() {
-//    int movieId = 550;
-//    return MovieFragment.newInstance(movieId);
     return MovieFragmentList.newInstance();
   }
 }

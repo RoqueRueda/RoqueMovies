@@ -1,9 +1,9 @@
 package movies.rueda.roque.com.roquemovies.themoviedb;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 import movies.rueda.roque.com.roquemovies.model.Movie;
 
@@ -91,14 +91,14 @@ public class TheMovieDbFetcher {
 
       String jsonString = getUrlDataString(url);
       Log.i(TAG, "Received JSON: " + jsonString);
-      return parseResult(jsonString);
+      return parseMovie(jsonString);
     } catch (IOException ioe) {
       Log.e(TAG, "Failed to fetch movie", ioe);
     }
     return null;
   }
 
-  private Movie parseResult(String jsonString) {
+  private Movie parseMovie(String jsonString) {
     try {
       JSONObject jsonObject = new JSONObject(jsonString);
       Movie m = new Movie();
@@ -121,4 +121,57 @@ public class TheMovieDbFetcher {
   }
 
 
+  public List<Movie> fetchPopular() {
+
+    try {
+      String method = "popular";
+      return getMovieList(method);
+    } catch (IOException ioe) {
+      Log.e(TAG, "Failed to fetch movie", ioe);
+    }
+    return null;
+  }
+
+  private List<Movie> getMovieList(String method) throws IOException {
+    String url = Uri.parse("https://api.themoviedb.org/3/movie/"+method)
+            .buildUpon()
+            .appendQueryParameter("api_key", API_KEY)
+            .appendQueryParameter("language", "en-US")
+            .appendQueryParameter("page", "1")
+            .build().toString();
+
+    String jsonString = getUrlDataString(url);
+    Log.i(TAG, "Received JSON: " + jsonString);
+    return parseList(jsonString);
+  }
+
+  private List<Movie> parseList(String jsonString) {
+    try {
+      JSONObject jsonObject = new JSONObject(jsonString);
+      ArrayList<Movie> result = new ArrayList<Movie>(20);
+      JSONArray array = jsonObject.getJSONArray("results");
+      for (int i = 0; i < array.length(); i++) {
+        JSONObject jsonMovie = array.getJSONObject(i);
+        Movie m = new Movie();
+        m.setId(jsonMovie.getInt("id"));
+        m.setTitle(jsonMovie.getString("title"));
+        m.setPosterPath(jsonMovie.getString("poster_path"));
+        result.add(m);
+      }
+      return result;
+    } catch (JSONException jsone) {
+      Log.e(TAG, "Could not parse the response json:" + jsonString, jsone);
+    }
+    return null;
+  }
+
+  public List<Movie> fetchTopRated() {
+    try {
+      String method = "top_rated";
+      return getMovieList(method);
+    } catch (IOException ioe) {
+      Log.e(TAG, "Failed to fetch movie", ioe);
+    }
+    return null;
+  }
 }
