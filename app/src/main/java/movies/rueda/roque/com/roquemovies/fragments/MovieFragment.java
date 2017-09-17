@@ -122,11 +122,13 @@ public class MovieFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     View v = inflater.inflate(R.layout.fragment_movie_detal, container, false);
-    // Get the reference to the views.
+    // Display the up button
     ((AppCompatActivity)getActivity()).getSupportActionBar()
             .setDisplayHomeAsUpEnabled(true);
     ((AppCompatActivity)getActivity()).getSupportActionBar()
             .setDisplayShowHomeEnabled(true);
+
+    // Get the reference to the views.
     wireUpViews(v);
     fetchMovie();
 
