@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -53,6 +54,7 @@ public class MovieFragment extends Fragment {
   private Button mMarkAsFavorite;
   private TextView mOverview;
   private RecyclerView mTrailers;
+  private ProgressBar mLoadingIndicator;
 
   /////////////////////////////////
   // Helper function for fragment
@@ -139,23 +141,30 @@ public class MovieFragment extends Fragment {
     mMarkAsFavorite = rootView.findViewById(R.id.favorite);
     mOverview = rootView.findViewById(R.id.overview);
     mTrailers = rootView.findViewById(R.id.trailers);
+    mLoadingIndicator = rootView.findViewById(R.id.loading);
   }
 
   private void fetchMovie() {
-    // Check if the Network Connection is alive and connected.
-//    ConnectivityManager connMrg = (ConnectivityManager)
-//            getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-//    NetworkInfo networkInfo = connMrg.getActiveNetworkInfo();
-//    if (networkInfo != null && networkInfo.isConnected()) {
-      int movieId = getArguments().getInt(ARG_MOVIE_ID);
-      new FetchMovieTask().execute(movieId);
-//    } else {
-//      // Display not connected
-//    }
+    int movieId = getArguments().getInt(ARG_MOVIE_ID);
+    displayLoading();
+    new FetchMovieTask().execute(movieId);
+  }
 
+  private void displayLoading() {
+    mTitle.setVisibility(View.GONE);
+    mPoster.setVisibility(View.GONE);
+    mReleaseDate.setVisibility(View.GONE);
+    mDuration.setVisibility(View.GONE);
+    mScore.setVisibility(View.GONE);
+    mMarkAsFavorite.setVisibility(View.GONE);
+    mOverview.setVisibility(View.GONE);
+    mTrailers.setVisibility(View.GONE);
+    mLoadingIndicator.setVisibility(View.VISIBLE);
+    mLoadingIndicator.setIndeterminate(true);
   }
 
   private void bindMovie(Movie freshMovie) {
+    hideLoading();
     mMovie = freshMovie;
     mTitle.setText(mMovie.getTitle());
     String posterUrl = "http://image.tmdb.org/t/p/w185"+mMovie.getPosterPath();
@@ -174,6 +183,19 @@ public class MovieFragment extends Fragment {
     mDuration.setText(String.format("%smin", mMovie.getDuration()));
     mScore.setText(String.format("%s/10", mMovie.getVoteAvg()));
     mOverview.setText(mMovie.getOverView());
+  }
+
+  private void hideLoading() {
+    mTitle.setVisibility(View.VISIBLE);
+    mPoster.setVisibility(View.VISIBLE);
+    mReleaseDate.setVisibility(View.VISIBLE);
+    mDuration.setVisibility(View.VISIBLE);
+    mScore.setVisibility(View.VISIBLE);
+    mMarkAsFavorite.setVisibility(View.VISIBLE);
+    mOverview.setVisibility(View.VISIBLE);
+    mTrailers.setVisibility(View.VISIBLE);
+    mLoadingIndicator.setVisibility(View.GONE);
+    mLoadingIndicator.setIndeterminate(false);
   }
 
 }
