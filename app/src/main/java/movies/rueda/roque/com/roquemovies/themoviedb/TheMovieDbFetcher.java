@@ -86,6 +86,7 @@ public class TheMovieDbFetcher {
       String url = Uri.parse("http://api.themoviedb.org/3/movie/" + movieId)
               .buildUpon()
               .appendQueryParameter("api_key", API_KEY)
+              .appendQueryParameter("append_to_response", "videos")
               .build().toString();
 
       String jsonString = getUrlDataString(url);
