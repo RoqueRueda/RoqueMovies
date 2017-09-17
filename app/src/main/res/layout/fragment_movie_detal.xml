@@ -86,20 +86,22 @@
 
     <TextView
         android:id="@+id/overview"
-        android:layout_width="368dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="5dp"
+        android:layout_width="350dp"
+        android:layout_height="64dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/movie_poster"
-        tools:text="A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground fight clubs forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion."/>
+        app:layout_constraintTop_toBottomOf="@+id/favorite"
+        tools:text="A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground fight clubs forming in every town, until an eccentric gets in the way and ignites an out-of-control spiral toward oblivion."
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/trailers"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/overview"
         app:layout_constraintVertical_bias="0.0"
@@ -113,5 +115,14 @@
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"/>
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline"
+        app:layout_constraintGuide_begin="20dp"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteY="20dp"
+        tools:layout_editor_absoluteX="0dp"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -17,7 +17,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import movies.rueda.roque.com.roquemovies.R;
 import movies.rueda.roque.com.roquemovies.model.Movie;
@@ -76,19 +84,26 @@ public class MovieFragment extends Fragment {
   /**
    * AsyncTask to get the movie data in background
    */
-  private class FetchMovieTask extends AsyncTask<Integer,Void,Void> {
+  private class FetchMovieTask extends AsyncTask<Integer, Void, Movie> {
 
     private static final String TAG = "FetchMovieTask";
 
     @Override
-    protected Void doInBackground(Integer... params) {
+    protected Movie doInBackground(Integer... params) {
+      // Execute the fetch of the movie in background.
       TheMovieDbFetcher fetcher = new TheMovieDbFetcher();
       // Validate the parameters
       if (params != null && params.length > 0) {
-        fetcher.fetchMovie(params[0]);
+        return fetcher.fetchMovie(params[0]);
       }
 
       return null;
+    }
+
+    @Override
+    protected void onPostExecute(Movie movie) {
+      // Set the result
+      bindMovie(movie);
     }
   }
 
@@ -111,20 +126,6 @@ public class MovieFragment extends Fragment {
     return v;
   }
 
-  private void fetchMovie() {
-    // Check if the Network Connection is alive and connected.
-//    ConnectivityManager connMrg = (ConnectivityManager)
-//            getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-//    NetworkInfo networkInfo = connMrg.getActiveNetworkInfo();
-//    if (networkInfo != null && networkInfo.isConnected()) {
-      int movieId = getArguments().getInt(ARG_MOVIE_ID);
-      new FetchMovieTask().execute(movieId);
-//    } else {
-//      // Display not connected
-//    }
-
-  }
-
   /**
    * Gets the references to the corresponding views
    * @param rootView Root View that contains all the widgets
@@ -139,4 +140,40 @@ public class MovieFragment extends Fragment {
     mOverview = rootView.findViewById(R.id.overview);
     mTrailers = rootView.findViewById(R.id.trailers);
   }
+
+  private void fetchMovie() {
+    // Check if the Network Connection is alive and connected.
+//    ConnectivityManager connMrg = (ConnectivityManager)
+//            getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+//    NetworkInfo networkInfo = connMrg.getActiveNetworkInfo();
+//    if (networkInfo != null && networkInfo.isConnected()) {
+      int movieId = getArguments().getInt(ARG_MOVIE_ID);
+      new FetchMovieTask().execute(movieId);
+//    } else {
+//      // Display not connected
+//    }
+
+  }
+
+  private void bindMovie(Movie freshMovie) {
+    mMovie = freshMovie;
+    mTitle.setText(mMovie.getTitle());
+    String posterUrl = "http://image.tmdb.org/t/p/w185"+mMovie.getPosterPath();
+    Picasso.with(getActivity()).load(posterUrl).into(mPoster);
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    try {
+      Date resultDate = dateFormat.parse(mMovie.getReleaseDate());
+      Calendar calendar = new GregorianCalendar();
+      calendar.setTime(resultDate);
+      mReleaseDate.setText(new StringBuilder().append("").append(calendar.get(Calendar.YEAR)).toString());
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
+    mDuration.setText(String.format("%smin", mMovie.getDuration()));
+    mScore.setText(String.format("%s/10", mMovie.getVoteAvg()));
+    mOverview.setText(mMovie.getOverView());
+  }
+
 }

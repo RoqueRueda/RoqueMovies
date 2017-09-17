@@ -4,6 +4,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +14,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import movies.rueda.roque.com.roquemovies.model.Movie;
 
 /**
  * Retrieves information from the movie db API
@@ -76,7 +81,7 @@ public class TheMovieDbFetcher {
     return new String(getUrlDataBytes(urlEndPoint));
   }
 
-  public void fetchMovie(int movieId) {
+  public Movie fetchMovie(int movieId) {
     try {
       String url = Uri.parse("http://api.themoviedb.org/3/movie/" + movieId)
               .buildUpon()
@@ -85,9 +90,33 @@ public class TheMovieDbFetcher {
 
       String jsonString = getUrlDataString(url);
       Log.i(TAG, "Received JSON: " + jsonString);
+      return parseResult(jsonString);
     } catch (IOException ioe) {
-      Log.e(TAG, "Failed to fetch items", ioe);
+      Log.e(TAG, "Failed to fetch movie", ioe);
     }
+    return null;
+  }
+
+  private Movie parseResult(String jsonString) {
+    try {
+      JSONObject jsonObject = new JSONObject(jsonString);
+      Movie m = new Movie();
+      m.setId(jsonObject.getInt("id"));
+      m.setTitle(jsonObject.getString("title"));
+      m.setPosterPath(jsonObject.getString("poster_path"));
+      m.setVoteAvg(jsonObject.getDouble("vote_average"));
+      m.setVoteCount(jsonObject.getInt("vote_count"));
+      m.setReleaseDate(jsonObject.getString("release_date"));
+      m.setDuration(jsonObject.getString("runtime"));
+      m.setOverView(jsonObject.getString("overview"));
+      // Set trailers
+
+      return m;
+    } catch (JSONException jsone) {
+      Log.e(TAG, "Could not parse the response json:" + jsonString, jsone);
+    }
+
+    return null;
   }
 
 

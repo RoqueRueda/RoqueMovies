@@ -12,8 +12,11 @@ public class Movie {
   private int id;
   private String title;
   private String posterPath;
-  private float voteAvg;
+  private double voteAvg;
   private int voteCount;
+  private String releaseDate;
+  private String duration;
+  private String overView;
 
   public int getId() {
     return id;
@@ -39,11 +42,11 @@ public class Movie {
     this.posterPath = posterPath;
   }
 
-  public float getVoteAvg() {
+  public double getVoteAvg() {
     return voteAvg;
   }
 
-  public void setVoteAvg(float voteAvg) {
+  public void setVoteAvg(double voteAvg) {
     this.voteAvg = voteAvg;
   }
 
@@ -53,5 +56,29 @@ public class Movie {
 
   public void setVoteCount(int voteCount) {
     this.voteCount = voteCount;
+  }
+
+  public String getReleaseDate() {
+    return releaseDate;
+  }
+
+  public void setReleaseDate(String releaseDate) {
+    this.releaseDate = releaseDate;
+  }
+
+  public String getDuration() {
+    return duration;
+  }
+
+  public void setDuration(String duration) {
+    this.duration = duration;
+  }
+
+  public String getOverView() {
+    return overView;
+  }
+
+  public void setOverView(String overView) {
+    this.overView = overView;
   }
 }
