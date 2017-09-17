@@ -12,6 +12,11 @@ public class MovieListActivity extends BaseActivity {
 
 
   @Override
+  protected int getLayoutResId() {
+    return R.layout.activity_masterdetail;
+  }
+
+  @Override
   protected Fragment getFragment() {
     return MovieFragmentList.newInstance();
   }

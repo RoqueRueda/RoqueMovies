@@ -2,6 +2,7 @@ package movies.rueda.roque.com.roquemovies;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -21,16 +22,19 @@ public abstract class BaseActivity extends AppCompatActivity {
 
   protected Toolbar mMoviesToolBar;
 
+  @LayoutRes
+  protected int getLayoutResId() {
+    return R.layout.activity_movie_list;
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_movie_list);
+    setContentView(getLayoutResId());
 
     mMoviesToolBar = (Toolbar) findViewById(R.id.movies_toolbar);
     setSupportActionBar(mMoviesToolBar);
     mMoviesToolBar.setTitle("RoqueMovies");
-    Resources.Theme theme = getTheme();
-    mMoviesToolBar.setTitleTextColor(getResources().getColor(R.color.movie_title, theme));
 
     // Get fragment manager
     FragmentManager fm = getSupportFragmentManager();
