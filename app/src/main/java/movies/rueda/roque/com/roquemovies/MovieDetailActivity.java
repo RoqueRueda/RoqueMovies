@@ -21,6 +21,11 @@ public class MovieDetailActivity extends BaseActivity {
   }
 
   @Override
+  public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+    super.onCreate(savedInstanceState, persistentState);
+  }
+
+  @Override
   protected Fragment getFragment() {
     int movieId = getIntent().getIntExtra(MOVIE_ID, 0);
     return MovieFragment.newInstance(movieId);
