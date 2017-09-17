@@ -1,5 +1,6 @@
 package movies.rueda.roque.com.roquemovies.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,10 +45,17 @@ public class MovieFragmentList extends Fragment {
   private RecyclerView mMoviesRecyclerView;
   private MoviesAdapter mAdapter;
 
-  public boolean getPopularMovies() {
-    SharedPreferences preferences = getActivity().
+  public static boolean getPopularMovies(Context ctx) {
+    SharedPreferences preferences = ctx.
             getSharedPreferences(MOVROQ_PREF, Context.MODE_PRIVATE);
     return preferences.getBoolean(LIST_POPULAR, true);
+  }
+
+  public static void savePopularMovies(Context ctx, boolean popular) {
+    SharedPreferences.Editor editor = ctx.getSharedPreferences(MOVROQ_PREF, Context.MODE_PRIVATE)
+            .edit();
+    editor.putBoolean(LIST_POPULAR, popular).apply();
+    editor.commit();
   }
 
   public static MovieFragmentList newInstance() {
@@ -142,7 +150,17 @@ public class MovieFragmentList extends Fragment {
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
-    new FetchMovieListTask().execute(getPopularMovies());
+    updateUI();
+  }
+
+  private void updateUI() {
+    new FetchMovieListTask().execute(getPopularMovies(getActivity()));
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    updateUI();
   }
 
   @Override
